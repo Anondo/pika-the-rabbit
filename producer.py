@@ -1,19 +1,20 @@
 import sys
 import pika
 
-message = ' '.join(sys.argv[1:]) or "Hello World"
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+def queue_task(message = "Hello world"):
 
-channel = connection.channel()
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 
-channel.queue_declare(queue='hello' , durable=True) #durable makes the queue stay even after server restart
+    channel = connection.channel()
 
-channel.basic_publish(exchange='' , routing_key='hello' , body=message , properties=
-                      pika.BasicProperties(
-                        delivery_mode = 2 # making the message persistent
-                     ))
+    channel.queue_declare(queue='hello' , durable=True) #durable makes the queue stay even after server restart
 
-print("Message:{} sent to the queue".format(message))
+    channel.basic_publish(exchange='' , routing_key='hello' , body=message , properties=
+                          pika.BasicProperties(
+                            delivery_mode = 2 # making the message persistent
+                         ))
 
-connection.close()
+    print("Message:{} sent to the queue".format(message))
+
+    connection.close()

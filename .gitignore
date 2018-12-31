@@ -1,0 +1,4 @@
+#byte compiled
+
+__pycache__/
+*.pyc
